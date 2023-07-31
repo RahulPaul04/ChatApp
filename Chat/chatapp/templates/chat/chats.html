@@ -1,0 +1,50 @@
+{% extends "chat/layout.html" %}
+
+{% block body %}
+    <div id="messages">
+    </div>
+    <input id="message" type="text"><br>
+    <input id="message-submit" type="button" value="send">
+
+    <script>
+        const number = {{ number }};
+        const socket = new WebSocket(`ws://localhost:8000/chats/?phone=${number}`);
+
+        socket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            const messagedata = data["message"];
+            const sender = data["sender"];
+            const container = document.querySelector("#messages");
+            const msg = document.createElement("div");
+            msg.textContent = messagedata;
+            container.appendChild(msg);
+        };
+
+        socket.onclose = function(e) {
+            console.error("Chat socket closed unexpectedly");
+        };
+
+        document.querySelector("#message").focus();
+        document.querySelector("#message").onkeyup = function(e) {
+            if (e.keyCode === 13) {
+                document.querySelector("#message-submit").click();
+            }
+        };
+
+        document.querySelector("#message-submit").onclick = function(e) {
+            const message = document.querySelector("#message");
+            const msgContent = message.value;
+            socket.send(JSON.stringify({
+                "message": msgContent,
+                "sender": {{ number }},
+                "receiver": 9496428355
+            }));
+            const container = document.querySelector("#messages");
+            const msgDiv = document.createElement("div");
+            msgDiv.textContent = msgContent;
+            msgDiv.style.textAlign = "right";
+            container.appendChild(msgDiv);
+            message.value = "";
+        };
+    </script>
+{% endblock %}

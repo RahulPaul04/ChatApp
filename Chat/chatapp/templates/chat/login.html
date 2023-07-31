@@ -1,0 +1,26 @@
+{% extends "chat/layout.html"%}
+
+{%block body%}
+
+    <form method="post" action={%url 'login'%}>
+        {% csrf_token %}
+        <input type="text" name="number" placeholder="Enter Phone Number">
+        <input type="submit" value="login">
+    </form>
+    {% if message %}
+        <div id="message-container">{{ message }}</div>
+    {% endif %}
+
+    <script>
+        // Function to hide the message container after 5 seconds
+        function hideMessage() {
+            const messageContainer = document.getElementById('message-container');
+            if (messageContainer) {
+                messageContainer.style.display = 'none';
+            }
+        }
+
+        // Hide the message after 5 seconds (5000 milliseconds)
+        setTimeout(hideMessage, 5000);
+    </script>
+{%endblock%}
