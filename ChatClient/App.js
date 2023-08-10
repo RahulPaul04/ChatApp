@@ -14,8 +14,8 @@ const Tab = createMaterialTopTabNavigator();
 export default function App() {
 
   const number = 7012186017
-  const socket = new WebSocket(`ws://something:8000/chats/?phone=${number}`)
-
+  const socket = new WebSocket(`ws://192.168.1.3:8000/chats/?phone=${number}`)
+  
   const stack = createStackNavigator()
 
 
